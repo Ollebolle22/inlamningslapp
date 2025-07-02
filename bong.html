@@ -4,30 +4,58 @@
   <meta charset="UTF-8">
   <title>Inlämningskvitto</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin-top: 40px; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
     .slip {
       border: 1px dashed #000;
-      margin: 20px auto;
       width: 300px;
       padding: 20px;
-      page-break-after: always;
+      box-sizing: border-box;
+      text-align: center;
+      position: relative;
     }
+
     .id {
       font-size: 28px;
       font-weight: bold;
       margin: 10px 0;
     }
+
     .qr {
       width: 100px;
       height: 100px;
+      margin-bottom: 10px;
     }
-    .label { font-weight: bold; margin-top: 10px; }
-    input[type="text"] { width: 90%; margin: 5px 0; }
-    button { margin-top: 20px; padding: 10px 20px; }
+
+    .label {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    input[type="text"] {
+      width: 90%;
+      margin: 5px 0;
+    }
+
+    .print-btn {
+      margin-top: 15px;
+      padding: 6px 14px;
+    }
+
     @media print {
-      button { display: none; }
+      body { display: block; }
+      .print-btn { display: none; }
+      .slip { page-break-after: always; margin: 0 auto; }
     }
   </style>
+
   <script>
     function generateID() {
       const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -41,8 +69,23 @@
       });
     }
 
-    function printTwo() {
-      window.print();
+    function printSlip(id) {
+      const slip = document.getElementById(id).outerHTML;
+      const printWindow = window.open('', '', 'width=400,height=600');
+      printWindow.document.write(`
+        <html><head><title>Print</title>
+        <style>
+          body { font-family: Arial; text-align: center; margin: 40px; }
+          .qr { width: 100px; height: 100px; margin-bottom: 10px; }
+          .id { font-size: 28px; font-weight: bold; margin: 10px 0; }
+          .label { font-weight: bold; margin-top: 10px; }
+          input[type="text"] { width: 90%; margin: 5px 0; border: none; border-bottom: 1px solid #000; }
+        </style>
+        </head><body onload="window.print(); window.close();">
+        ${slip}
+        </body></html>
+      `);
+      printWindow.document.close();
     }
 
     window.onload = generateID;
@@ -51,22 +94,21 @@
 <body>
 
   <!-- Kundens kvitto -->
-  <div class="slip">
+  <div class="slip" id="kund-slip">
     <h2>Botkyrka Lås & Säkerhetsmontage</h2>
     <div class="id">ID: <span class="inlamnings-id"></span></div>
-    <img class="qr" src="" alt="QR-kod"><br><br>
+    <img class="qr" src="" alt="QR-kod"><br>
     <p>Vi har mottagit din inlämning.</p>
     <p>Tack för att du valde oss!</p>
-    <p>
-      <strong>Kontakt:</strong><br>
-      070-123 45 67<br>
+    <p><strong>Kontakt:</strong><br>
+      08 530 361 75<br>
       info@botkyrkalas.se<br>
-      www.botkyrkalas.se
-    </p>
+      www.botkyrkalas.se</p>
+    <button class="print-btn" onclick="printSlip('kund-slip')">🖨️ Skriv ut kundens lapp</button>
   </div>
 
-  <!-- Er interna kopia -->
-  <div class="slip">
+  <!-- Intern kopia -->
+  <div class="slip" id="intern-slip">
     <div class="id">ID: <span class="inlamnings-id"></span></div>
     <img class="qr" src="" alt="QR-kod"><br>
     <div class="label">Vad ska göras:</div>
@@ -76,9 +118,8 @@
     <div class="label">Namn:</div>
     <input type="text"><br>
     <p>Tack för besöket!</p>
+    <button class="print-btn" onclick="printSlip('intern-slip')">🖨️ Skriv ut intern lapp</button>
   </div>
-
-  <button onclick="printTwo()">Skriv ut båda lapparna</button>
 
 </body>
 </html>
