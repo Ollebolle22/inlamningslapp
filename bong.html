@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <title>Inlämningskvitto</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 40px; }
+    .slip {
+      border: 1px dashed #000;
+      margin: 20px auto;
+      width: 300px;
+      padding: 20px;
+      page-break-after: always;
+    }
+    .id {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    .qr {
+      width: 100px;
+      height: 100px;
+    }
+    .label { font-weight: bold; margin-top: 10px; }
+    input[type="text"] { width: 90%; margin: 5px 0; }
+    button { margin-top: 20px; padding: 10px 20px; }
+    @media print {
+      button { display: none; }
+    }
+  </style>
+  <script>
+    function generateID() {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      let id = "";
+      for (let i = 0; i < 6; i++) {
+        id += chars[Math.floor(Math.random() * chars.length)];
+      }
+      document.querySelectorAll(".inlamnings-id").forEach(el => el.textContent = id);
+      document.querySelectorAll(".qr").forEach(img => {
+        img.src = "https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=" + id;
+      });
+    }
+
+    function printTwo() {
+      window.print();
+    }
+
+    window.onload = generateID;
+  </script>
+</head>
+<body>
+
+  <!-- Kundens kvitto -->
+  <div class="slip">
+    <h2>Botkyrka Lås & Säkerhetsmontage</h2>
+    <div class="id">ID: <span class="inlamnings-id"></span></div>
+    <img class="qr" src="" alt="QR-kod"><br><br>
+    <p>Vi har mottagit din inlämning.</p>
+    <p>Tack för att du valde oss!</p>
+    <p>
+      <strong>Kontakt:</strong><br>
+      070-123 45 67<br>
+      info@botkyrkalas.se<br>
+      www.botkyrkalas.se
+    </p>
+  </div>
+
+  <!-- Er interna kopia -->
+  <div class="slip">
+    <div class="id">ID: <span class="inlamnings-id"></span></div>
+    <img class="qr" src="" alt="QR-kod"><br>
+    <div class="label">Vad ska göras:</div>
+    <input type="text"><br>
+    <div class="label">Telefonnummer:</div>
+    <input type="text"><br>
+    <div class="label">Namn:</div>
+    <input type="text"><br>
+    <p>Tack för besöket!</p>
+  </div>
+
+  <button onclick="printTwo()">Skriv ut båda lapparna</button>
+
+</body>
+</html>
