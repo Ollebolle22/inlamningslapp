@@ -2,60 +2,56 @@
 <html lang="sv">
 <head>
   <meta charset="UTF-8">
-  <title>Inlämningskvitto</title>
+  <title>Inlämningskvitton</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
+      padding: 20px;
       display: flex;
-      justify-content: center;
-      gap: 20px;
       flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
     }
-
     .slip {
       border: 1px dashed #000;
-      width: 300px;
       padding: 20px;
+      width: 300px;
       box-sizing: border-box;
       text-align: center;
-      position: relative;
     }
-
+    .slip img.logo {
+      width: 200px;
+      height: auto;
+      margin-bottom: 10px;
+    }
     .id {
-      font-size: 28px;
+      font-size: 26px;
       font-weight: bold;
       margin: 10px 0;
     }
-
     .qr {
       width: 100px;
       height: 100px;
-      margin-bottom: 10px;
+      margin: 10px 0;
     }
-
     .label {
       font-weight: bold;
       margin-top: 10px;
     }
-
     input[type="text"] {
       width: 90%;
       margin: 5px 0;
     }
-
     .print-btn {
-      margin-top: 15px;
-      padding: 6px 14px;
+      margin-top: 20px;
+      padding: 10px 15px;
     }
-
     @media print {
-      body { display: block; }
-      .print-btn { display: none; }
-      .slip { page-break-after: always; margin: 0 auto; }
+      .print-btn {
+        display: none !important;
+      }
     }
   </style>
-
   <script>
     function generateID() {
       const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -69,23 +65,13 @@
       });
     }
 
-    function printSlip(id) {
-      const slip = document.getElementById(id).outerHTML;
-      const printWindow = window.open('', '', 'width=400,height=600');
-      printWindow.document.write(`
-        <html><head><title>Print</title>
-        <style>
-          body { font-family: Arial; text-align: center; margin: 40px; }
-          .qr { width: 100px; height: 100px; margin-bottom: 10px; }
-          .id { font-size: 28px; font-weight: bold; margin: 10px 0; }
-          .label { font-weight: bold; margin-top: 10px; }
-          input[type="text"] { width: 90%; margin: 5px 0; border: none; border-bottom: 1px solid #000; }
-        </style>
-        </head><body onload="window.print(); window.close();">
-        ${slip}
-        </body></html>
-      `);
-      printWindow.document.close();
+    function printThis(button) {
+      const original = document.body.innerHTML;
+      const slip = button.closest(".slip").outerHTML;
+      document.body.innerHTML = "<div class='printable'>" + slip + "</div>";
+      window.print();
+      document.body.innerHTML = original;
+      generateID();
     }
 
     window.onload = generateID;
@@ -93,22 +79,25 @@
 </head>
 <body>
 
-  <!-- Kundens kvitto -->
-  <div class="slip" id="kund-slip">
-    <h2>Botkyrka Lås & Säkerhetsmontage</h2>
+  <!-- Kundlapp -->
+  <div class="slip">
+    <img src="https://www.botkyrkalas.se/wp-content/uploads/2025/01/Botkyrka-las-web-logo-scaled.webp" alt="Logo" class="logo">
     <div class="id">ID: <span class="inlamnings-id"></span></div>
     <img class="qr" src="" alt="QR-kod"><br>
     <p>Vi har mottagit din inlämning.</p>
-    <p>Tack för att du valde oss!</p>
-    <p><strong>Kontakt:</strong><br>
+    <p><strong>Tack för att du valde oss!</strong></p>
+    <p>
+      <strong>Kontakt:</strong><br>
       08 530 361 75<br>
       info@botkyrkalas.se<br>
-      www.botkyrkalas.se</p>
-    <button class="print-btn" onclick="printSlip('kund-slip')">🖨️ Skriv ut kundens lapp</button>
+      www.botkyrkalas.se
+    </p>
+    <button class="print-btn" onclick="printThis(this)">Skriv ut denna lapp</button>
   </div>
 
-  <!-- Intern kopia -->
-  <div class="slip" id="intern-slip">
+  <!-- Internlapp -->
+  <div class="slip">
+    <img src="https://www.botkyrkalas.se/wp-content/uploads/2025/01/Botkyrka-las-web-logo-scaled.webp" alt="Logo" class="logo">
     <div class="id">ID: <span class="inlamnings-id"></span></div>
     <img class="qr" src="" alt="QR-kod"><br>
     <div class="label">Vad ska göras:</div>
@@ -117,8 +106,8 @@
     <input type="text"><br>
     <div class="label">Namn:</div>
     <input type="text"><br>
-    <p>Tack för besöket!</p>
-    <button class="print-btn" onclick="printSlip('intern-slip')">🖨️ Skriv ut intern lapp</button>
+    <p><em>Jobba snabbare!</em></p>
+    <button class="print-btn" onclick="printThis(this)">Skriv ut denna lapp</button>
   </div>
 
 </body>
