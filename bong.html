@@ -53,29 +53,44 @@
     }
   </style>
   <script>
-    function generateID() {
-      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-      let id = "";
-      for (let i = 0; i < 6; i++) {
-        id += chars[Math.floor(Math.random() * chars.length)];
-      }
-      document.querySelectorAll(".inlamnings-id").forEach(el => el.textContent = id);
-      document.querySelectorAll(".qr").forEach(img => {
-        img.src = "https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=" + id;
-      });
-    }
+  let currentID = "";
 
-    function printThis(button) {
-      const original = document.body.innerHTML;
-      const slip = button.closest(".slip").outerHTML;
-      document.body.innerHTML = "<div class='printable'>" + slip + "</div>";
-      window.print();
-      document.body.innerHTML = original;
-      generateID();
+  function generateID() {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let id = "";
+    for (let i = 0; i < 6; i++) {
+      id += chars[Math.floor(Math.random() * chars.length)];
     }
+    currentID = id;
+    document.querySelectorAll(".inlamnings-id").forEach(el => el.textContent = id);
+    document.querySelectorAll(".qr").forEach(img => {
+      img.src = "https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=" + id;
+    });
+  }
 
-    window.onload = generateID;
-  </script>
+  function printThis(button) {
+    const slip = button.closest(".slip");
+    const printWindow = window.open("", "", "width=400,height=600");
+    printWindow.document.write(`
+      <html><head><title>Utskrift</title>
+      <style>
+        body { font-family: Arial; text-align: center; margin: 20px; }
+        img { max-width: 100%; }
+        input { display: none; }
+        button { display: none; }
+        .slip { border: none; }
+      </style>
+      </head><body>${slip.outerHTML}</body></html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+  }
+
+  window.onload = generateID;
+</script>
+
 </head>
 <body>
 
@@ -88,7 +103,7 @@
     <p><strong>Tack för att du valde oss!</strong></p>
     <p>
       <strong>Kontakt:</strong><br>
-      08 530 361 75<br>
+      070-123 45 67<br>
       info@botkyrkalas.se<br>
       www.botkyrkalas.se
     </p>
@@ -106,7 +121,7 @@
     <input type="text"><br>
     <div class="label">Namn:</div>
     <input type="text"><br>
-    <p><em>Jobba snabbare!</em></p>
+    <p><em>Tack för besöket!</em></p>
     <button class="print-btn" onclick="printThis(this)">Skriv ut denna lapp</button>
   </div>
 
