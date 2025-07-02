@@ -12,90 +12,82 @@
       justify-content: center;
       gap: 40px;
     }
+
     .slip {
       border: 1px dashed #000;
       padding: 20px;
+      padding-top: 40px;
       width: 300px;
       box-sizing: border-box;
       text-align: center;
     }
+
     .slip img.logo {
       width: 200px;
       height: auto;
-      margin-bottom: 10px;
+      margin-top: 10px;
+      margin-bottom: 20px;
     }
+
     .id {
       font-size: 26px;
       font-weight: bold;
-      margin: 10px 0;
+      margin: 20px 0 15px 0;
     }
+
     .qr {
-      width: 100px;
-      height: 100px;
-      margin: 10px 0;
+      width: 80px;
+      height: 80px;
+      margin: 15px 0 20px 0;
     }
+
     .label {
       font-weight: bold;
       margin-top: 10px;
     }
+
     input[type="text"] {
       width: 90%;
       margin: 5px 0;
     }
+
     .print-btn {
       margin-top: 20px;
       padding: 10px 15px;
     }
+
     @media print {
       .print-btn {
         display: none !important;
       }
+      input {
+        border: none;
+        background: none;
+      }
+      .id {
+        font-size: 32px !important;
+        margin: 20px 0 15px 0 !important;
+      }
+      .qr {
+        width: 80px !important;
+        height: 80px !important;
+        margin: 15px 0 20px 0 !important;
+        max-width: 80px !important;
+      }
+      .slip {
+        padding-top: 40px !important;
+      }
+      .logo {
+        margin-top: 10px !important;
+        margin-bottom: 20px !important;
+      }
     }
   </style>
-  <script>
-  let currentID = "";
-
-  function generateID() {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    let id = "";
-    for (let i = 0; i < 6; i++) {
-      id += chars[Math.floor(Math.random() * chars.length)];
-    }
-    currentID = id;
-    document.querySelectorAll(".inlamnings-id").forEach(el => el.textContent = id);
-    document.querySelectorAll(".qr").forEach(img => {
-      img.src = "https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=" + id;
-    });
-  }
-
-  function printThis(button) {
-    const slip = button.closest(".slip");
-    const printWindow = window.open("", "", "width=400,height=600");
-    printWindow.document.write(`
-      <html><head><title>Utskrift</title>
-      <style>
-        body { font-family: Arial; text-align: center; margin: 20px; }
-        img { max-width: 100%; }
-        input { display: none; }
-        button { display: none; }
-        .slip { border: none; }
-      </style>
-      </head><body>${slip.outerHTML}</body></html>
-    `);
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
-    printWindow.close();
-  }
-
-  window.onload = generateID;
-</script>
-
 </head>
 <body>
 
   <!-- Kundlapp -->
-  <div class="slip">
+  <div class="slip" id="kundslip">
     <img src="https://www.botkyrkalas.se/wp-content/uploads/2025/01/Botkyrka-las-web-logo-scaled.webp" alt="Logo" class="logo">
     <div class="id">ID: <span class="inlamnings-id"></span></div>
     <img class="qr" src="" alt="QR-kod"><br>
@@ -103,7 +95,7 @@
     <p><strong>Tack för att du valde oss!</strong></p>
     <p>
       <strong>Kontakt:</strong><br>
-      070-123 45 67<br>
+      08 - 530 361 75<br>
       info@botkyrkalas.se<br>
       www.botkyrkalas.se
     </p>
@@ -111,7 +103,7 @@
   </div>
 
   <!-- Internlapp -->
-  <div class="slip">
+  <div class="slip" id="internslip">
     <img src="https://www.botkyrkalas.se/wp-content/uploads/2025/01/Botkyrka-las-web-logo-scaled.webp" alt="Logo" class="logo">
     <div class="id">ID: <span class="inlamnings-id"></span></div>
     <img class="qr" src="" alt="QR-kod"><br>
@@ -121,9 +113,65 @@
     <input type="text"><br>
     <div class="label">Namn:</div>
     <input type="text"><br>
-    <p><em>Tack för besöket!</em></p>
+    <p><em>Jobba snabbare!</em></p>
     <button class="print-btn" onclick="printThis(this)">Skriv ut denna lapp</button>
   </div>
+
+  <script>
+    let currentID = "";
+
+    function generateID() {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      let id = "";
+      for (let i = 0; i < 6; i++) {
+        id += chars[Math.floor(Math.random() * chars.length)];
+      }
+      currentID = id;
+      document.querySelectorAll(".inlamnings-id").forEach(el => el.textContent = id);
+      document.querySelectorAll(".qr").forEach(img => {
+        img.src = "https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=" + id;
+      });
+    }
+
+    function printThis(button) {
+      const slip = button.closest(".slip");
+      const printWindow = window.open("", "", "width=400,height=600");
+
+      const slipHTML = slip.outerHTML;
+
+      printWindow.document.write(`
+        <html><head><title>Utskrift</title>
+        <style>
+          body { font-family: Arial; text-align: center; margin: 20px; }
+          img.logo { max-width: 200px; height: auto; margin-top: 10px; margin-bottom: 20px; }
+          img.qr { width: 80px; height: 80px; margin: 15px 0 20px 0; }
+          input, button { display: none !important; }
+          .slip { border: none; padding-top: 40px !important; }
+          .id { font-size: 32px !important; margin: 20px 0 15px 0 !important; }
+        </style>
+        </head><body>${slipHTML}</body></html>
+      `);
+
+      printWindow.document.close();
+
+      printWindow.onload = () => {
+        const qrImg = printWindow.document.querySelector(".qr");
+        if (qrImg && !qrImg.complete) {
+          qrImg.onload = () => {
+            printWindow.focus();
+            printWindow.print();
+            printWindow.close();
+          };
+        } else {
+          printWindow.focus();
+          printWindow.print();
+          printWindow.close();
+        }
+      };
+    }
+
+    window.onload = generateID;
+  </script>
 
 </body>
 </html>
