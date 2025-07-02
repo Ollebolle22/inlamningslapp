@@ -116,6 +116,7 @@
       info@botkyrkalas.se<br>
       www.botkyrkalas.se
     </p>
+    <div class="locksmed-citat"></div>
     <button class="print-btn" onclick="printThis(this)">Skriv ut denna lapp</button>
   </div>
 
@@ -171,18 +172,18 @@
         "“Det är inte du, det är din huvudnyckel.”",
         "“Ett liv utan lås är som en dörr utan gångjärn.”",
         "“Vi bryter inte upp – vi öppnar med kärlek.”",
-        "“Bättre en låssmed i handen än en inlåst kund på taket.”",
+        "“Bättre en låssmed i handen än en nyckel på vift.”",
         "“Bakom varje stark dörr står en ännu starkare låssmed.”",
         "“Tillträde förnekas, men inte för oss.”",
         "“Du ska icke dyrka falska kopior – endast originalcylindrar.”",
-        "“Fråga inte vad porten kan göra för dig – fråga var fan porttelefonen är kopplad.”",
-        "“Livet är som ett lås – ibland behöver du bara lite grafit.”",
+        "“Fråga inte vad porten kan göra för dig – fråga hur du öppnar den.”",
+        "“Livet är som ett lås – ibland behöver man bara lite grafit.”",
         "“Vi kommer när du är som mest låst.”",
         "“Öppna sinnen. Och dörrar.”",
         "“Alla vägar bär till kunden – men vi tar gärna brandtrappan.”"
       ];
       const slump = citat[Math.floor(Math.random() * citat.length)];
-      document.querySelector(".locksmed-citat").textContent = slump;
+      document.querySelectorAll(".locksmed-citat").forEach(el => el.textContent = slump);
     }
 
     function printThis(button) {
