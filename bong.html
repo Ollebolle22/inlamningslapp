@@ -56,13 +56,27 @@
       padding: 10px 15px;
     }
 
+    .print-value {
+      display: none;
+    }
+
+    .locksmed-citat {
+      margin-top: 30px;
+      font-style: italic;
+      font-size: 13px;
+    }
+
     @media print {
       .print-btn {
         display: none !important;
       }
       input {
-        border: none;
-        background: none;
+        display: none !important;
+      }
+      .print-value {
+        display: block !important;
+        font-size: 14px;
+        margin-bottom: 10px;
       }
       .id {
         font-size: 32px !important;
@@ -80,6 +94,9 @@
       .logo {
         margin-top: 10px !important;
         margin-bottom: 20px !important;
+      }
+      .print-spacer {
+        height: 5cm;
       }
     }
   </style>
@@ -107,14 +124,24 @@
     <img src="https://www.botkyrkalas.se/wp-content/uploads/2025/01/Botkyrka-las-web-logo-scaled.webp" alt="Logo" class="logo">
     <div class="id">ID: <span class="inlamnings-id"></span></div>
     <img class="qr" src="" alt="QR-kod"><br>
+
     <div class="label">Vad ska göras:</div>
-    <input type="text"><br>
+    <input type="text" oninput="updatePreview(this)">
+    <div class="print-value"></div>
+
     <div class="label">Telefonnummer:</div>
-    <input type="text"><br>
+    <input type="text" oninput="updatePreview(this)">
+    <div class="print-value"></div>
+
     <div class="label">Namn:</div>
-    <input type="text"><br>
+    <input type="text" oninput="updatePreview(this)">
+    <div class="print-value"></div>
+
     <p><em>Jobba snabbare!</em></p>
+    <div class="locksmed-citat"></div>
     <button class="print-btn" onclick="printThis(this)">Skriv ut denna lapp</button>
+
+    <div class="print-spacer"></div>
   </div>
 
   <script>
@@ -133,6 +160,31 @@
       });
     }
 
+    function updatePreview(input) {
+      const valueDiv = input.nextElementSibling;
+      valueDiv.textContent = input.value;
+    }
+
+    function generateCitat() {
+      const citat = [
+        "“Ge mig en låscylinder och jag rör världen.” – Låssmedarkimedes",
+        "“Det är inte du, det är din huvudnyckel.”",
+        "“Ett liv utan lås är som en dörr utan gångjärn.”",
+        "“Vi bryter inte upp – vi öppnar med kärlek.”",
+        "“Bättre en låssmed i handen än en inlåst kund på taket.”",
+        "“Bakom varje stark dörr står en ännu starkare låssmed.”",
+        "“Tillträde förnekas, men inte för oss.”",
+        "“Du ska icke dyrka falska kopior – endast originalcylindrar.”",
+        "“Fråga inte vad porten kan göra för dig – fråga var fan porttelefonen är kopplad.”",
+        "“Livet är som ett lås – ibland behöver du bara lite grafit.”",
+        "“Vi kommer när du är som mest låst.”",
+        "“Öppna sinnen. Och dörrar.”",
+        "“Alla vägar bär till kunden – men vi tar gärna brandtrappan.”"
+      ];
+      const slump = citat[Math.floor(Math.random() * citat.length)];
+      document.querySelector(".locksmed-citat").textContent = slump;
+    }
+
     function printThis(button) {
       const slip = button.closest(".slip");
       const printWindow = window.open("", "", "width=400,height=600");
@@ -146,8 +198,11 @@
           img.logo { max-width: 200px; height: auto; margin-top: 10px; margin-bottom: 20px; }
           img.qr { width: 80px; height: 80px; margin: 15px 0 20px 0; }
           input, button { display: none !important; }
+          .print-value { display: block !important; font-size: 14px; margin-bottom: 10px; }
           .slip { border: none; padding-top: 40px !important; }
           .id { font-size: 32px !important; margin: 20px 0 15px 0 !important; }
+          .locksmed-citat { font-style: italic; font-size: 13px; margin-top: 30px; }
+          .print-spacer { height: 5cm; }
         </style>
         </head><body>${slipHTML}</body></html>
       `);
@@ -170,7 +225,10 @@
       };
     }
 
-    window.onload = generateID;
+    window.onload = () => {
+      generateID();
+      generateCitat();
+    };
   </script>
 
 </body>
